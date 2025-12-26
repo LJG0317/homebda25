@@ -29,10 +29,11 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#hero" class="logo">이름<span class="role"> · 데이터 분석가</span></a>
-      <nav class="nav">
+      <nav class="nav" role="navigation" aria-label="Primary navigation">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
@@ -41,7 +42,7 @@
       </nav>
       <div class="header-actions">
         <button id="theme-toggle" aria-label="Toggle theme" class="icon-btn">
-          <i id="theme-icon" class="fa-solid fa-circle-half-stroke"></i>
+          <i id="theme-icon" aria-hidden="true" class="fa-solid fa-circle-half-stroke"></i>
         </button>
         <button id="menu-toggle" class="icon-btn mobile-only" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
       </div>
@@ -50,7 +51,7 @@
   <!-- Scroll progress indicator -->
   <div id="scroll-progress" aria-hidden="true"></div>
 
-  <main>
+  <main id="main-content">
     <!-- HERO -->
     <section id="hero" class="hero">
       <div class="container hero-inner">
@@ -324,6 +325,7 @@
           </article>
         </div>
 
+        <div id="form-status" role="status" aria-live="polite" class="sr-only"></div>
         <form id="contact-form" class="contact-form" aria-label="Contact form">
           <label>이름<input type="text" name="name" required></label>
           <label>이메일<input type="email" name="email" required></label>

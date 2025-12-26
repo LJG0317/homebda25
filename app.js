@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // CONTACT form handler (no network) - accessible feedback
   const form = document.getElementById('contact-form');
   if(form){
+    const status = document.getElementById('form-status');
     form.addEventListener('submit', (e)=>{
       e.preventDefault();
       const name = form.elements['name'].value.trim();
@@ -125,12 +126,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
       const msg = form.elements['message'].value.trim();
       // Basic validation
       if(!name || !email || !msg){
-        alert('모든 필드를 작성해 주세요.');
+        status.textContent = '모든 필드를 작성해 주세요.';
+        status.classList.remove('sr-only');
+        form.querySelector('input, textarea').focus();
         return;
       }
-      // Simulate send
-      alert('메시지가 전송되었습니다. 감사합니다! (데모 전송)');
+      // Simulate send — update aria-live region for screen readers
+      status.textContent = '메시지가 전송되었습니다. 감사합니다! (데모 전송)';
+      status.classList.remove('sr-only');
       form.reset();
+      setTimeout(()=>{ status.classList.add('sr-only'); status.textContent = ''; }, 4000);
     });
   }
 
