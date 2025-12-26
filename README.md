@@ -138,3 +138,33 @@ Python과 SQL을 활용한 데이터 분석 경험과 Tableau를 통한 시각�
 * 채용 담당자는 "코드 완성도"보다 **사고 과정**을 봅니다
 
 ---
+
+## 실행 방법 / Run instructions
+
+이 저장소는 정적(single-page) 포트폴리오 사이트로, 외부 빌드 도구 없이 브라우저에서 바로 열어 실행할 수 있습니다.
+
+- 파일 목록: `index.html`, `styles.css`, `app.js` (루트 폴더)
+- 로컬에서 열기(권장): `index.html`을 더블클릭하거나 아래 명령 사용
+
+```bash
+# Linux: 기본 브라우저로 열기
+xdg-open index.html
+
+# 또는 간단한 로컬 서버 (파일 접근 정책으로 인해 일부 브라우저에서 필요할 수 있음)
+python3 -m http.server 8000
+# 브라우저에서 열기: http://localhost:8000/index.html
+```
+
+주의: 페이지는 CDN(외부) 리소스를 사용합니다. 인터넷 연결이 필요합니다.
+
+외부 리소스(CDN) 목록 (index.html 상단 주석에도 명시됨):
+
+- Google Fonts — https://fonts.googleapis.com (Inter)
+- Font Awesome — https://cdnjs.cloudflare.com (아이콘)
+- Chart.js — https://cdn.jsdelivr.net/npm/chart.js (차트 렌더링)
+
+필수 확인 사항:
+
+- `index.html` 내 이메일/깃허브/LinkedIn 링크를 실제 값으로 수정하세요.
+- 접근성 점검은 브라우저 개발자 도구의 Lighthouse(Accessibility) 또는 axe 확장으로 권장합니다.
+
