@@ -1,181 +1,143 @@
-// app.js - main interactivity for portfolio
-// 주요 기능: 테마 토글(prefs + localStorage), 탭/필터, 프로젝트 모달+아코디언, Chart.js 시각화,
-// IntersectionObserver 기반 섹션 등장, 스무스 스크롤, Back-to-top
-
+// app.js - interactivity: theme, filters (reorder/highlight), charts, scroll spy, progress, accessibility
 document.addEventListener('DOMContentLoaded', ()=>{
-  // THEME TOGGLE
+  // THEME TOGGLE (prefers + localStorage)
   const themeToggle = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
-  const userPref = localStorage.getItem('theme');
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  const applyTheme = (theme)=>{
-    if(theme === 'light'){
+  const setTheme = (mode)=>{
+    if(mode === 'light'){
       document.documentElement.style.setProperty('--bg-1','#f2f6ff');
       document.documentElement.style.setProperty('--bg-2','#eaf3ff');
-      document.documentElement.style.setProperty('--glass-bg','rgba(255,255,255,0.6)');
       themeIcon.className = 'fa-solid fa-sun';
     } else {
-      document.documentElement.style.setProperty('--bg-1','#0f1020');
+      document.documentElement.style.setProperty('--bg-1','#04050a');
       document.documentElement.style.setProperty('--bg-2','#071028');
-      document.documentElement.style.setProperty('--glass-bg','rgba(255,255,255,0.06)');
       themeIcon.className = 'fa-solid fa-moon';
     }
-  }
-
-  // initialize theme
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if(userPref) applyTheme(userPref);
-  else applyTheme(prefersDark ? 'dark' : 'light');
-
+  };
+  setTheme(saved || (prefersDark ? 'dark' : 'dark'));
   themeToggle.addEventListener('click', ()=>{
-    const current = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    const current = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'dark');
     const next = current === 'dark' ? 'light' : 'dark';
     localStorage.setItem('theme', next);
-    applyTheme(next);
-    document.body.animate([{opacity:0.95},{opacity:1}],{duration:320});
+    setTheme(next);
   });
 
-  // SMOOTH SCROLL for nav links
+  // SMOOTH SCROLL for in-page links
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click', (e)=>{
       const href = a.getAttribute('href');
-      if(href.length>1){
-        e.preventDefault();
-        document.querySelector(href).scrollIntoView({behavior:'smooth',block:'start'});
-      }
+      if(href.length>1){ e.preventDefault(); document.querySelector(href).scrollIntoView({behavior:'smooth',block:'start'}); }
     });
   });
 
-  // PROJECT FILTER / TABS
-  const tabs = document.querySelectorAll('.tab');
-  const projects = document.querySelectorAll('.project-card');
-  tabs.forEach(tab=>{
-    tab.addEventListener('click', ()=>{
-      tabs.forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      const filter = tab.dataset.filter;
-      projects.forEach(p=>{
-        if(filter==='all') p.style.display='block';
-        else {
-          const techs = p.dataset.tech.split(' ');
-          p.style.display = techs.includes(filter) ? 'block' : 'none';
-        }
-      });
-    });
-  });
-
-  // PROJECT DETAILS (modal with accordion inside)
-  const modal = document.getElementById('project-modal');
-  const modalContent = document.getElementById('modal-content');
-  const closeBtn = modal.querySelector('.modal-close');
-
-  const projectDetails = {
-    'p1':{
-      title:'온라인 커머스 매출 분석 및 고객 세분화',
-      goal:'재구매율 개선 및 핵심 고객군 도출',
-      data:'주문/고객 트랜잭션 테이블, 고객 프로필, 상품 카테고리(가상 데이터 기반)',
-      method:'SQL로 요약 테이블 생성 → Python(pandas)로 RFM 분석 → 세그멘테이션 → Tableau로 대시보드',
-      results:'상위 20% 고객이 전체 매출의 약 60% 기여. 이탈 가능 고객군 및 잠재 우수 고객 도출.',
-      recommendation:'우수 고객 대상 개인화 프로모션 및 이탈 가능 고객 재타겟팅',
-      tech:'Python, SQL, Tableau'
-    },
-    'p2':{
-      title:'매장별 매출 성과 분석 및 운영 개선',
-      goal:'매출 편차 원인 분석, 운영 개선 방향 도출',
-      data:'매장별 POS 데이터, 방문수, 프로모션 로그',
-      method:'Excel 피벗 분석 → SQL 기반 KPI 계산 → Tableau로 지역별 패턴 시각화',
-      results:'고매출 매장은 객단가 영향이 큼. 일부 프로모션은 특정 지역 의존.',
-      recommendation:'고성과 매장 전략을 저성과 매장에 적용, 지역 맞춤 프로모션 운영',
-      tech:'Excel, SQL, Tableau'
-    },
-    'p3':{
-      title:'고객 이탈 분석 및 예측 (기초 모델링)',
-      goal:'고객 행동으로 이탈 가능 고객 식별',
-      data:'고객 행동 로그, 최근 활동, 거래 이력',
-      method:'요약 테이블(SQL) → 특징 분석(python) → 로지스틱 회귀 모델',
-      results:'최근 활동 감소가 이탈에 가장 큰 영향. 특정 서비스 미사용군 이탈 확률 높음.',
-      recommendation:'활동 감소 고객 대상 리텐션 캠페인 및 서비스 사용 유도',
-      tech:'Python, SQL, Excel'
-    }
+  // Scroll progress indicator
+  const progress = document.getElementById('scroll-progress');
+  const onScroll = ()=>{
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = h>0 ? (window.scrollY / h) * 100 : 0;
+    progress.style.width = pct + '%';
+    // back to top visibility
+    const backBtn = document.getElementById('back-to-top');
+    if(window.scrollY>400) backBtn.style.display='block'; else backBtn.style.display='none';
   };
+  window.addEventListener('scroll', onScroll);
+  onScroll();
 
-  document.querySelectorAll('.details-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.dataset.project;
-      const d = projectDetails[id];
-      if(!d) return;
-      modalContent.innerHTML = buildModalHTML(d);
-      modal.setAttribute('aria-hidden','false');
-      document.body.style.overflow='hidden';
-      // add accordion listeners
-      modal.querySelectorAll('.acc-toggle').forEach(t=>{
-        t.addEventListener('click', ()=>{
-          t.classList.toggle('open');
-          const panel = t.nextElementSibling;
-          if(t.classList.contains('open')) panel.style.maxHeight = panel.scrollHeight + 'px';
-          else panel.style.maxHeight = null;
-        });
-      });
+  // SCROLL SPY (active nav link)
+  const sections = document.querySelectorAll('main section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+  const spyObs = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      const id = en.target.id;
+      const link = document.querySelector('.nav a[href="#'+id+'"]');
+      if(en.isIntersecting){ navLinks.forEach(n=>n.classList.remove('active')); if(link) link.classList.add('active'); }
     });
-  });
+  },{threshold:0.45});
+  sections.forEach(s=>spyObs.observe(s));
 
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
-  function closeModal(){ modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  // PROJECT FILTER: reorder & emphasize (no hiding)
+  const projFilterBtns = document.querySelectorAll('.proj-filter');
+  const projectsList = document.getElementById('projects-list');
+  projFilterBtns.forEach(btn=>btn.addEventListener('click', ()=>{
+    projFilterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    const cards = Array.from(projectsList.querySelectorAll('.project-card'));
+    // emphasize matching first
+    cards.sort((a,b)=>{
+      if(f==='all') return 0;
+      const aMatch = a.dataset.tech.includes(f) ? 0 : 1;
+      const bMatch = b.dataset.tech.includes(f) ? 0 : 1;
+      return aMatch - bMatch;
+    });
+    // reorder DOM
+    cards.forEach(c=>projectsList.appendChild(c));
+    // add emphasis class
+    cards.forEach(c=>{ c.classList.toggle('emphasis', f!=='all' && c.dataset.tech.includes(f)); });
+  }));
 
-  function buildModalHTML(d){
-    return `
-      <h2 id="modal-title">${d.title}</h2>
-      <p><strong>Goal:</strong> ${d.goal}</p>
-      <p><strong>Data:</strong> ${d.data}</p>
-      <p><strong>Method:</strong> ${d.method}</p>
-      <p><strong>Results:</strong> ${d.results}</p>
-      <p><strong>Recommendation:</strong> ${d.recommendation}</p>
-      <p><strong>Tech:</strong> ${d.tech}</p>
-      <hr>
-      <div class="accordion">
-        <button class="acc-toggle">분석 과정 / 인사이트</button>
-        <div class="acc-panel"><p>문제 정의 → 데이터 정제 → 지표 설계(RFM 등) → 세분화 → 검증 → 시각화 및 제안</p></div>
-        <button class="acc-toggle">비즈니스 임팩트</button>
-        <div class="acc-panel"><p>우수 고객 타깃팅을 통한 평균 재구매율 증가 및 마케팅 효율 향상 기대</p></div>
-      </div>
-    `;
-  }
+  // SKILL FILTER: reorder/emphasize skills (no hiding)
+  const skillFilters = document.querySelectorAll('.skill-filter');
+  const skillsList = document.getElementById('skills-list');
+  skillFilters.forEach(btn=>btn.addEventListener('click', ()=>{
+    skillFilters.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    const items = Array.from(skillsList.querySelectorAll('.skill'));
+    items.sort((a,b)=>{
+      if(f==='all') return 0;
+      const aMatch = a.dataset.cat === f ? 0 : 1;
+      const bMatch = b.dataset.cat === f ? 0 : 1;
+      return aMatch - bMatch;
+    });
+    items.forEach(i=>skillsList.appendChild(i));
+    items.forEach(i=> i.classList.toggle('emphasis', f!=='all' && i.dataset.cat===f));
+  }));
 
-  // CHARTS (Chart.js) - Demo data (가상 데이터)
+  // CHARTS (Chart.js) - demo realistic data
   const salesCtx = document.getElementById('salesChart');
   if(salesCtx){
-    const salesChart = new Chart(salesCtx,{type:'line',data:{
-      labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-      datasets:[{label:'Monthly Revenue (Demo)',data:[12,15,13,18,20,22,24,23,26,28,29,31],fill:true,backgroundColor:'rgba(126,240,255,0.12)',borderColor:'rgba(126,240,255,0.9)',tension:0.3}]
-    },options:{responsive:true,plugins:{legend:{display:false},tooltip:{mode:'index'}},scales:{y:{beginAtZero:false}}});
+    new Chart(salesCtx,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'Monthly Revenue',data:[22,25,28,34,36,40,42,41,45,48,52,58],borderColor:'rgba(0,229,255,0.95)',backgroundColor:'rgba(0,229,255,0.08)',tension:0.3,pointRadius:3}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{mode:'index'}}}});
   }
-
   const segCtx = document.getElementById('segmentChart');
   if(segCtx){
-    const segChart = new Chart(segCtx,{type:'doughnut',data:{labels:['Top 20%','Mid 30%','Low 50%'],datasets:[{data:[60,25,15],backgroundColor:['#7ef0ff','#9b6bff','#6be28a']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+    new Chart(segCtx,{type:'doughnut',data:{labels:['Top 20%','Mid 30%','Low 50%'],datasets:[{data:[60,25,15],backgroundColor:['#00E5FF','#9b6bff','#6be28a']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+  }
+  const chanCtx = document.getElementById('channelChart');
+  if(chanCtx){
+    new Chart(chanCtx,{type:'bar',data:{labels:['Email','Search','Referral','Recommendation'],datasets:[{label:'Conversion %',data:[2.4,1.8,1.2,4.6],backgroundColor:['#00E5FF','#9b6bff','#6be28a','#00E5FF']} ]},options:{responsive:true,plugins:{legend:{display:false}}}});
   }
 
-  // IntersectionObserver reveal
-  const obs = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target);} 
-    });
-  },{threshold:0.12});
+  // IntersectionObserver reveal (subtle)
+  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } }); },{threshold:0.12});
   document.querySelectorAll('.card, .skill, .project-card, .viz-card, .hero-card, .hero-meta').forEach(el=>{ el.classList.add('reveal'); obs.observe(el); });
+
+  // CONTACT form handler (no network) - accessible feedback
+  const form = document.getElementById('contact-form');
+  if(form){
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = form.elements['name'].value.trim();
+      const email = form.elements['email'].value.trim();
+      const msg = form.elements['message'].value.trim();
+      // Basic validation
+      if(!name || !email || !msg){
+        alert('모든 필드를 작성해 주세요.');
+        return;
+      }
+      // Simulate send
+      alert('메시지가 전송되었습니다. 감사합니다! (데모 전송)');
+      form.reset();
+    });
+  }
 
   // Back to top
   const backBtn = document.getElementById('back-to-top');
-  window.addEventListener('scroll', ()=>{
-    if(window.scrollY>500) backBtn.style.display='block'; else backBtn.style.display='none';
-  });
   backBtn.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-  // Accessibility: ensure accordion panels collapsed initially
-  document.addEventListener('click', (e)=>{
-    if(e.target.matches('.acc-toggle')){
-      // handled earlier for modal accordions
-    }
-  });
+  // ensure keyboard accessible links
+  document.querySelectorAll('.project-card, .skill').forEach(el=>{ el.setAttribute('tabindex', '0'); });
 });

@@ -47,6 +47,8 @@
       </div>
     </div>
   </header>
+  <!-- Scroll progress indicator -->
+  <div id="scroll-progress" aria-hidden="true"></div>
 
   <main>
     <!-- HERO -->
@@ -58,6 +60,11 @@
           <div class="hero-cta">
             <a href="#projects" class="btn primary">프로젝트 보기</a>
             <a href="#contact" class="btn ghost">연락하기</a>
+          </div>
+          <div class="hero-kpis">
+            <div class="kpi"><strong>12</strong><span>분석 프로젝트</span></div>
+            <div class="kpi"><strong>+18%</strong><span>평균 KPI 개선</span></div>
+            <div class="kpi"><strong>6</strong><span>대시보드 구축</span></div>
           </div>
         </div>
         <div class="hero-meta glass">
@@ -97,82 +104,87 @@
     </section>
 
     <!-- SKILLS -->
-    <section id="skills" class="section">
+    <section id="skills" class="section" aria-labelledby="skills-title">
       <div class="container">
-        <h2 class="section-title">Skills — Tech Stack</h2>
-        <div class="skills-grid">
-          <div class="skill card glass"><h4>Python</h4><p>pandas, numpy, matplotlib, seaborn</p></div>
-          <div class="skill card glass"><h4>SQL</h4><p>JOIN, CTE, Window Function, Aggregation</p></div>
-          <div class="skill card glass"><h4>Tableau</h4><p>대시보드 설계, KPI 시각화</p></div>
-          <div class="skill card glass"><h4>Excel</h4><p>피벗·함수·리포팅</p></div>
+        <h2 id="skills-title" class="section-title">Skills — Tech Stack</h2>
+        <p class="lead">언어부터 시각화/협업 도구까지, 실무에 적용 가능한 기술 스택과 숙련 근거를 제공합니다.</p>
+
+        <div class="skills-controls">
+          <div class="filters">
+            <button class="skill-filter active" data-filter="all">전체</button>
+            <button class="skill-filter" data-filter="analysis">분석</button>
+            <button class="skill-filter" data-filter="viz">시각화</button>
+            <button class="skill-filter" data-filter="ml">ML</button>
+            <button class="skill-filter" data-filter="engineering">데이터엔지니어링</button>
+            <button class="skill-filter" data-filter="collab">협업</button>
+          </div>
+        </div>
+
+        <div class="skills-grid" id="skills-list">
+          <div class="skill card glass" data-cat="analysis"><h4>Python</h4><p>pandas, numpy로 대용량 데이터 전처리 및 분석 자동화 경험</p></div>
+          <div class="skill card glass" data-cat="analysis"><h4>SQL</h4><p>복잡한 JOIN/CTE/윈도우 함수로 KPI용 요약 테이블 설계</p></div>
+          <div class="skill card glass" data-cat="viz"><h4>Tableau</h4><p>스토리텔링 중심의 대시보드 설계 및 KPI 전달</p></div>
+          <div class="skill card glass" data-cat="viz"><h4>Matplotlib / Seaborn</h4><p>분석 결과 검증용 커스텀 시각화 제작</p></div>
+          <div class="skill card glass" data-cat="ml"><h4>Modeling</h4><p>로지스틱 회귀 기반 이탈 예측 등 기초 모델링 경험</p></div>
+          <div class="skill card glass" data-cat="engineering"><h4>ETL / Excel</h4><p>데이터 파이프라인 설계 및 Excel 기반 복합 리포팅</p></div>
+          <div class="skill card glass" data-cat="collab"><h4>Git / Jupyter</h4><p>버전 관리 및 문서화로 협업 생산성 유지</p></div>
         </div>
       </div>
     </section>
 
     <!-- PROJECTS -->
-    <section id="projects" class="section">
+    <section id="projects" class="section" aria-labelledby="projects-title">
       <div class="container">
-        <h2 class="section-title">Projects — 주요 프로젝트</h2>
+        <h2 id="projects-title" class="section-title">Featured Projects — 문제·접근·결과</h2>
+        <p class="lead">각 프로젝트는 문제 정의(Problem), 접근(Approach), 결과(Result), 사용 기술(Stack), 실무 적용 링크(Link)를 명확히 제시합니다.</p>
 
-        <!-- Filter / Tabs -->
-        <div class="tabs glass">
-          <button class="tab active" data-filter="all">All</button>
-          <button class="tab" data-filter="Python">Python</button>
-          <button class="tab" data-filter="SQL">SQL</button>
-          <button class="tab" data-filter="Tableau">Tableau</button>
-          <button class="tab" data-filter="Excel">Excel</button>
+        <div class="projects-controls">
+          <span class="muted">정렬/강조:</span>
+          <button class="proj-filter active" data-filter="all">전체</button>
+          <button class="proj-filter" data-filter="Python">Python</button>
+          <button class="proj-filter" data-filter="SQL">SQL</button>
+          <button class="proj-filter" data-filter="Tableau">Tableau</button>
         </div>
 
         <div class="projects-grid" id="projects-list">
-          <!-- Project Card 1 -->
+          <!-- Project 1 -->
           <article class="project-card card glass" data-tech="Python SQL Tableau" tabindex="0">
             <h3 class="proj-title">온라인 커머스 매출 분석 및 고객 세분화</h3>
-            <p class="proj-summary">재구매율 정체 문제 해결을 위한 고객 세분화 및 우수 고객 도출</p>
-            <ul class="proj-meta">
-              <li><strong>Goal:</strong> 재구매율 개선, 핵심 고객군 도출</li>
-              <li><strong>Tech:</strong> Python · SQL · Tableau</li>
-            </ul>
-            <div class="proj-stats">
-              <div><strong>Results:</strong><span>상위 20%가 매출 60% 기여</span></div>
-              <div><strong>Impact:</strong><span>개인화 프로모션 대상 식별</span></div>
-            </div>
-            <div class="proj-actions">
-              <button class="btn small details-btn" data-project="p1">자세히 보기</button>
-            </div>
+            <p class="proj-body"><strong>Problem:</strong> 재구매율 정체로 평균 주문 빈도 감소, 고객 유지 필요.</p>
+            <p class="proj-body"><strong>Approach:</strong> SQL로 거래/고객 요약 테이블 생성, Python(pandas)로 RFM 분석, 세그먼트 기반 기여도 분석 및 Tableau 대시보드 제작.</p>
+            <p class="proj-body"><strong>Result:</strong> 상위 20% 고객이 매출의 60% 기여. 잠재 우수 고객군 도출 및 카테고리별 이탈 위험 포착.</p>
+            <p class="proj-body"><strong>Stack:</strong> Python, SQL, Tableau</p>
+            <p class="proj-body"><strong>Link:</strong> <a href="#" aria-label="Project repository">Repository (예시)</a></p>
           </article>
 
-          <!-- Project Card 2 -->
+          <!-- Project 2 -->
           <article class="project-card card glass" data-tech="Excel SQL Tableau" tabindex="0">
             <h3 class="proj-title">매장별 매출 성과 분석 및 운영 개선</h3>
-            <p class="proj-summary">매장 간 매출 편차 원인 분석 및 운영 개선 제안</p>
-            <ul class="proj-meta">
-              <li><strong>Goal:</strong> 매출 편차 원인 파악</li>
-              <li><strong>Tech:</strong> Excel · SQL · Tableau</li>
-            </ul>
-            <div class="proj-stats">
-              <div><strong>Results:</strong><span>객단가 중요성 확인</span></div>
-              <div><strong>Impact:</strong><span>지역별 차등 프로모션 제안</span></div>
-            </div>
-            <div class="proj-actions">
-              <button class="btn small details-btn" data-project="p2">자세히 보기</button>
-            </div>
+            <p class="proj-body"><strong>Problem:</strong> 매장 간 매출 편차로 인한 운영 불균형.</p>
+            <p class="proj-body"><strong>Approach:</strong> POS/방문 데이터 통합, Excel 피벗으로 초기 인사이트 도출, SQL로 KPI 계산, Tableau로 지역 패턴 시각화.</p>
+            <p class="proj-body"><strong>Result:</strong> 객단가가 매출 차이에 주요 영향. 특정 프로모션은 지역 의존성이 높아 지역 맞춤화 필요.</p>
+            <p class="proj-body"><strong>Stack:</strong> Excel, SQL, Tableau</p>
+            <p class="proj-body"><strong>Link:</strong> <a href="#">Repository (예시)</a></p>
           </article>
 
-          <!-- Project Card 3 -->
+          <!-- Project 3 -->
           <article class="project-card card glass" data-tech="Python SQL Excel" tabindex="0">
             <h3 class="proj-title">고객 이탈 분석 및 예측 (기초 모델링)</h3>
-            <p class="proj-summary">고객 행동 기반 이탈 요인 분석 및 기초 예측 모델 제시</p>
-            <ul class="proj-meta">
-              <li><strong>Goal:</strong> 이탈 가능 고객 식별</li>
-              <li><strong>Tech:</strong> Python · SQL · Excel</li>
-            </ul>
-            <div class="proj-stats">
-              <div><strong>Results:</strong><span>활동 감소가 주요 요인</span></div>
-              <div><strong>Impact:</strong><span>재활성화 캠페인 제안</span></div>
-            </div>
-            <div class="proj-actions">
-              <button class="btn small details-btn" data-project="p3">자세히 보기</button>
-            </div>
+            <p class="proj-body"><strong>Problem:</strong> 고객 이탈률 증가 우려, 조기 식별 필요.</p>
+            <p class="proj-body"><strong>Approach:</strong> 행동 로그 기반 요약 테이블, 특징 비교, 로지스틱 회귀 모델로 기초 예측 수행.</p>
+            <p class="proj-body"><strong>Result:</strong> 활동 감소가 주요 예측 변수. 재활성화 캠페인을 통해 초기 리텐션 개선 가능성 확인.</p>
+            <p class="proj-body"><strong>Stack:</strong> Python, SQL, Excel</p>
+            <p class="proj-body"><strong>Link:</strong> <a href="#">Repository (예시)</a></p>
+          </article>
+
+          <!-- Project 4 -->
+          <article class="project-card card glass" data-tech="Python SQL" tabindex="0">
+            <h3 class="proj-title">상품 추천 실험 분석</h3>
+            <p class="proj-body"><strong>Problem:</strong> 추천 시스템 도입 후 전환율 효과 측정 필요.</p>
+            <p class="proj-body"><strong>Approach:</strong> A/B 테스트 설계, 전환률 비교, 통계적 유의성 검정, 세그먼트별 효과 분석.</p>
+            <p class="proj-body"><strong>Result:</strong> 평균 전환률 +3.4% 향상(유의), 특정 카테고리에서 강한 효과 관찰.</p>
+            <p class="proj-body"><strong>Stack:</strong> Python, SQL</p>
+            <p class="proj-body"><strong>Link:</strong> <a href="#">Repository (예시)</a></p>
           </article>
         </div>
       </div>
@@ -225,13 +237,109 @@
     </div>
   </footer>
 
-  <!-- Project Details Modal (hidden) -->
-  <div id="project-modal" class="modal" aria-hidden="true">
-    <div class="modal-dialog glass" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button class="modal-close" aria-label="Close modal">✕</button>
-      <div id="modal-content"></div>
+    <!-- PROCESS -->
+    <section id="process" class="section">
+      <div class="container">
+        <h2 class="section-title">Process — 분석 프로세스</h2>
+        <p class="lead">데이터 분석의 전형적인 흐름을 명확하게 설계하여 재현 가능하고 실무 적용이 쉬운 결과를 제공합니다.</p>
+        <div class="timeline">
+          <div class="step"><h4>1. Problem</h4><p>비즈니스 문제 정의 및 KPI 수립</p></div>
+          <div class="step"><h4>2. Data</h4><p>원자료 수집·정합성 검사·정제</p></div>
+          <div class="step"><h4>3. Explore</h4><p>기초 통계·시각화로 이상치 및 패턴 확인</p></div>
+          <div class="step"><h4>4. Model</h4><p>필요 시 예측/세분화 모델링</p></div>
+          <div class="step"><h4>5. Visualize</h4><p>대시보드로 KPI 및 인사이트 전달</p></div>
+          <div class="step"><h4>6. Recommend</h4><p>실행 가능한 제안 및 A/B 설계</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPACT -->
+    <section id="impact" class="section">
+      <div class="container">
+        <h2 class="section-title">Impact — 정량적 성과</h2>
+        <div class="kpi-grid">
+          <div class="kpi-card card glass"><strong>+18%</strong><span>평균 KPI 개선</span></div>
+          <div class="kpi-card card glass"><strong>12</strong><span>완료 프로젝트</span></div>
+          <div class="kpi-card card glass"><strong>6</strong><span>대시보드 배포</span></div>
+          <div class="kpi-card card glass"><strong>60%</strong><span>상위 고객 매출 기여</span></div>
+          <div class="kpi-card card glass"><strong>+3.4%</strong><span>A/B 전환율 개선(사례)</span></div>
+          <div class="kpi-card card glass"><strong>30%</strong><span>재활성화 캠페인 효과 (예시)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINI DASHBOARD -->
+    <section id="mini-dashboard" class="section">
+      <div class="container">
+        <h2 class="section-title">Mini Dashboard — 핵심 지표</h2>
+        <p class="muted">아래 차트는 데모 데이터(가상)입니다. 차트 아래 수치로 핵심 결과를 명시합니다.</p>
+        <div class="viz-grid">
+          <div class="viz-card glass">
+            <h4>매출 추이</h4>
+            <canvas id="salesChart" aria-label="매출 추이 차트" role="img"></canvas>
+            <p class="viz-key">최근 12개월 매출: <strong>$310K</strong> (데모)</p>
+          </div>
+          <div class="viz-card glass">
+            <h4>고객군 비중</h4>
+            <canvas id="segmentChart" aria-label="고객군 비중 차트" role="img"></canvas>
+            <p class="viz-key">Top20 기여: <strong>60%</strong></p>
+          </div>
+          <div class="viz-card glass">
+            <h4>채널별 전환</h4>
+            <canvas id="channelChart" aria-label="채널별 전환 차트" role="img"></canvas>
+            <p class="viz-key">추천 시스템 전환 증대: <strong>+3.4%</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE / EDUCATION -->
+    <section id="experience" class="section">
+      <div class="container">
+        <h2 class="section-title">Experience & Education</h2>
+        <div class="timeline-vertical">
+          <div class="item"><time>2023 — Present</time><h4>Data Analyst (Intern/Contract)</h4><p>프로젝트 기반 데이터 분석 및 대시보드 배포</p></div>
+          <div class="item"><time>2021 — 2023</time><h4>데이터 관련 프리랜스/프로젝트</h4><p>이커머스 매출 분석, RFM 기반 세분화</p></div>
+          <div class="item"><time>2018 — 2021</time><h4>BSc. in Statistics (예시)</h4><p>통계/머신러닝 기초 및 실습</p></div>
+        </div>
+      </div>
+    </section>
+
+  
+  <section id="contact" class="section">
+      <div class="container">
+        <h2 class="section-title">Contact</h2>
+        <div class="cards-grid">
+          <article class="card glass">
+            <h3>이메일</h3>
+            <p><a href="mailto:your_email@example.com">your_email@example.com</a></p>
+          </article>
+          <article class="card glass">
+            <h3>GitHub</h3>
+            <p><a href="https://github.com/your_id" target="_blank" rel="noopener">https://github.com/your_id</a></p>
+          </article>
+          <article class="card glass">
+            <h3>LinkedIn</h3>
+            <p><a href="#">https://linkedin.com/in/your_id</a></p>
+          </article>
+        </div>
+
+        <form id="contact-form" class="contact-form" aria-label="Contact form">
+          <label>이름<input type="text" name="name" required></label>
+          <label>이메일<input type="email" name="email" required></label>
+          <label>메시지<textarea name="message" rows="4" required></textarea></label>
+          <button class="btn primary" type="submit">보내기</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 홍길동 — Data Analyst Portfolio. Resume & Projects based on README.</p>
     </div>
-  </div>
+  </footer>
 
   <button id="back-to-top" title="Back to top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 
